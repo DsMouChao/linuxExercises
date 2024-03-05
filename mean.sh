@@ -35,7 +35,7 @@ count=0
 process_lines() {
     while IFS= read -r line; do
         if [[ -n $line ]]; then
-            sum=$((sum + line))
+            sum=$(echo "$sum + $line" | bc)
             ((count++))
        	fi
 
@@ -47,4 +47,6 @@ process_lines < <(cut -d "," -f $col_idx $input_source | tail -n +2)
 
 
 
-echo $(($sum/$count))
+# Use bc for floating point division and format the output
+average=$(echo "scale=2; $sum / $count" | bc)
+echo "$average"
